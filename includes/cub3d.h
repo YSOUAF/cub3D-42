@@ -5,10 +5,12 @@
 
 
 #include <stdio.h>
+# include <fcntl.h>
 #include <stdlib.h>
 #include "mlx.h"
 #include <math.h>
 #include <unistd.h>
+# include "../lib/get_next_line/get_next_line.h"
 
 #define TILE_SIZE 32
 #define WIN_W (50 * TILE_SIZE)
@@ -53,6 +55,12 @@ typedef struct s_map
 	char	**data;
 	int		width;
 	int		height;
+	char	*path_no;
+	char	*path_so;
+	char	*path_we;
+	char	*path_ea;
+	char	*color_f;
+	char	*color_c;
 }	t_map;
 
 typedef struct s_keys
@@ -73,6 +81,7 @@ typedef enum s_drct {
 	EAST,
 	WEST
 } t_drct;
+
 typedef struct s_ray
 {
 	double	angle;
@@ -128,4 +137,12 @@ int is_ray_facing_down(double angle);
 int is_ray_facing_up(double angle);
 int is_ray_facing_right(double angle);
 int is_ray_facing_left(double angle);
+
+
+size_t	ft_strlen(const char *s);
+int	ft_strncmp(const char *s1, const char *s2, size_t n);
+
+
+int check_ext(char *str);
+int	allocate_map(char *map, t_map **data);
 #endif 
