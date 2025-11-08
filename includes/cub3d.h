@@ -8,7 +8,6 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include "../minilibx-linux/mlx.h"
 #include <math.h>
 #include <unistd.h>
 # include "../lib/get_next_line/get_next_line.h"
