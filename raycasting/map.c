@@ -41,9 +41,9 @@ void draw_square(t_cub3d *cub, int x, int y, int color)
         while (j < TILE_SIZE)
         {
             if (j == TILE_SIZE - 1 || i == TILE_SIZE - 1)
-                my_mlx_pixel_put(cub, x + j, y + i, 0x000000);
+                mlx_put_pixel(cub->img.img, x + j, y + i, 0x000000);
             else
-                my_mlx_pixel_put(cub, x + j, y + i, color);
+                mlx_put_pixel(cub->img.img, x + j, y + i, color);
             j++;
         }
         i++;
@@ -72,7 +72,7 @@ void	render_tiles(t_cub3d *cub)
 		i++;
 	}
 }
-int	render_map(void *ptr)
+void	render_map(void *ptr)
 {
 	t_cub3d	*cub;
 
@@ -85,12 +85,12 @@ int	render_map(void *ptr)
 		for (size_t y = 0; y < WIN_H; y++)
 		{
 			if (y <= WIN_H / 2)
-				my_mlx_pixel_put(cub, x , y, 0x56DFCF);
+				mlx_put_pixel(cub->img.img, x , y, 0x56DFCF);
 			else
-				my_mlx_pixel_put(cub, x , y, 0x541212);
+				mlx_put_pixel(cub->img.img, x , y, 0x541212);
 		}
 	}
 	cast_all_rays(cub);
-	mlx_put_image_to_window(cub->mlx, cub->win, cub->img.img, 0, 0);
-	return (0);
+	mlx_image_to_window(cub->mlx, cub->img.img, 0, 0);
+	// mlx_put_image_to_window(cub->mlx, cub->win, cub->img.img, 0, 0);
 }

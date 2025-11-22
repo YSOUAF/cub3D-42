@@ -4,3 +4,10 @@ new_line ; allocate every line and complet whith espace if line < whidt and add 
 
 parss_map; check walls and number charter in map (N, E, S, W) and space for (0) and (character)
 
+
+
+
+
+
+
+

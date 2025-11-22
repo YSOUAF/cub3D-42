@@ -1,27 +1,28 @@
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -Iincludes #-fsanitize=address -g
+CFLAGS = -Wall -Wextra -Werror -Iincludes -fsanitize=address -g
 
 MLX_DIR = lib/MLX42
 
-MLX_FLAGS = -I$(MLX_DIR)/include/MLX42 -lm -lGL -lglfw
+MLX_FLAGS = -I $(MLX_DIR)/include/MLX42 -lm -lGL -lglfw
 
 GNL_DIR = lib/get_next_line
 MLX_LIB	= $(MLX_DIR)/build/libmlx42.a
 
 # SRC_DIR = raycasting
-# SRCS = raycasting/help_func.c raycasting/hooks.c \
-# 		raycasting/horizental2d.c raycasting/init_mlx.c \
-# 		raycasting/map.c raycasting/palyer_mov.c \
-# 		raycasting/set_player.c raycasting/set_rays.c \
-# 		raycasting/vertical2d.c main.c raycasting/facing.c
+SRCS_RAYCAST = raycasting/help_func.c raycasting/hooks.c \
+		raycasting/horizental2d.c raycasting/init_mlx.c \
+		raycasting/map.c raycasting/palyer_mov.c \
+		raycasting/set_player.c raycasting/set_rays.c \
+		raycasting/vertical2d.c main.c raycasting/facing.c
 
 SRC_PARS = parsing/pars_map.c parsing/utilis_map.c parsing/pars_tex_fc.c $(GNL_DIR)/get_next_line.c $(GNL_DIR)/get_next_line_utils.c \
 	lib/ft_strlen.c lib/ft_strncmp.c lib/ft_split.c lib/ft_atoi.c lib/ft_strdup.c lib/ft_calloc.c lib/ft_memcpy.c \
-	lib/ft_memset.c lib/is_digit.c lib/valid_num.c parsing/helper_function.c main.c
+	lib/ft_memset.c lib/is_digit.c lib/valid_num.c parsing/helper_function.c
 
+SRCS = ${SRC_PARS} ${SRCS_RAYCAST}
 OBJS = $(SRCS:%.c=%.o)
-OBJSPARS = $(SRC_PARS:%.c=%.o)
+# OBJSPARS = $(SRC_PARS:%.c=%.o)
 
 NAME = cub3d
 
@@ -34,14 +35,14 @@ $(MLX_DIR):
 $(MLX_LIB): $(MLX_DIR)
 	cd $(MLX_DIR) && cmake -B build -Wno-dev && cmake --build build -j4
 
-$(NAME): $(OBJSPARS)
-	$(CC) $(CFLAGS) $(OBJSPARS) $(MLX_LIB) $(MLX_FLAGS) -o $(NAME)
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(MLX_LIB) $(MLX_FLAGS) -o $(NAME)
 
 %.o: %.c includes/cub3d.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -I lib/MLX42/include/MLX42 -c $< -o $@
 
 clean:
-	rm -f $(OBJSPARS)
+	rm -f $(OBJS)
 
 fclean: clean
 	rm -f $(NAME)

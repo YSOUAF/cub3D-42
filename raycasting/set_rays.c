@@ -63,13 +63,13 @@ void draw_ray(t_cub3d *cub, int x)
         if (y >= top && y <= down)
         {
             if (cub->ray.drction == EAST)
-                my_mlx_pixel_put(cub, x, y, 0x3E3F29);
+                mlx_put_pixel(cub->img.img, x, y, 0x3E3F29);
             else if (cub->ray.drction == NORTH)
-                my_mlx_pixel_put(cub, x, y, 0x57564F);
+                mlx_put_pixel(cub->img.img, x, y, 0x57564F);
             else if (cub->ray.drction == SOUTH)
-                my_mlx_pixel_put(cub, x, y, 0x7A7A73);
+                mlx_put_pixel(cub->img.img, x, y, 0x7A7A73);
             else if (cub->ray.drction == WEST)
-                my_mlx_pixel_put(cub, x, y, 0x0A400C);
+                mlx_put_pixel(cub->img.img, x, y, 0x0A400C);
         }
     }
 }

@@ -68,7 +68,7 @@ void update_player_position(t_cub3d *cub)
     double new_y;
     double temp_x;
     double temp_y;
-
+printf("%f , %f\n", cub->player.pos.x , cub->player.pos.y);
     new_x = cub->player.pos.x;
     new_y = cub->player.pos.y;
     temp_x = new_x;
