@@ -6,50 +6,58 @@
 /*   By: mozinedd <mozinedd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/26 15:44:32 by mozinedd          #+#    #+#             */
-/*   Updated: 2025/08/27 16:17:42 by mozinedd         ###   ########.fr       */
+/*   Updated: 2025/10/15 16:15:57 by mozinedd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int check_walls(char **map)
+int	check_line_start(char *line)
 {
-	int i;
-	int j;
-	
+	int	j;
+
+	j = 0;
+	while (line[j] == ' ')
+		j++;
+	if (line[j] != '1' && line[j] != '\0')
+		return (0);
+	return (1);
+}
+
+int	check_line_end(char *line)
+{
+	int	j;
+
+	j = ft_strlen(line) - 1;
+	while (j >= 0 && line[j] == ' ')
+		j--;
+	if (line[j] != '1' && line[j] != ' ')
+		return (0);
+	return (1);
+}
+
+int	check_walls(char **map)
+{
+	int	i;
+	int	j;
+
 	i = 0;
 	while (map[i])
 	{
 		j = 0;
-		if (map[i][j] != '1')
+		if (!check_line_start(map[i]) || !check_line_end(map[i]))
 			return (0);
 		while (map[i][j])
 		{
-			if ((i == 0 || map[i + 1] == NULL ) && map[i][j] != '1')
+			if ((i == 0 || !map[i + 1]) && (map[i][j] != '1' && map[i][j] != ' '))
 				return (0);
 			j++;
 		}
-		if (map[i][j - 1] != '1')
-			return (0);
 		i++;
 	}
 	return (1);
 }
 
-int check_character(char *line)
-{
-	int i;
-	
-	i = 0;
-	while (line[i])
-	{
-		if (line[i] != '1' && line[i] != '0' && line[i] != 'N'
-			&& line[i] != 'W' && line[i] != 'S' && line[i] != 'E' && line[i] != ' ' && line[i] != '\n')
-			return (0);
-		i++;
-	}
-	return (1);
-}
 int check_num_character(char **map)
 {
 	int i;
@@ -72,108 +80,50 @@ int check_num_character(char **map)
 	return (sum);
 }
 
-int check_ext(char *str)
+int check_space(char **map, int y, int x)
 {
-	int len;
-	
-	len = ft_strlen(str);
-	if (ft_strncmp((str + (len - 4)), ".cub", 4) != 0)
-		return (0);
+	if (is_char_or_zero(map[y][x]))
+	{
+		if (!map[y-1] || map[y-1][x] == ' ')
+			return (printf("check1\n"), 0);
+		if (!map[y+1] || map[y+1][x] == ' ')
+			return (printf("check2\n"), 0);
+		if (map[y][x-1] == ' ')
+			return (printf("check3\n"), 0);
+		if (map[y][x+1] == '\0' || map[y][x+1] == ' ')
+			return (printf("check4\n"), 0);
+	}
 	return (1);
 }
 
-int	map_line(char *map, t_map **cub)
+int	check_space_in_map(char **map)
 {
-	int 	fd;
-	char 	*line;
-	int		cm;
+	int y;
+	int x;
 
-	cm = 0;
-	fd = open(map, O_RDONLY);
-	if (fd < 0)
-		return (printf("hnaaa22\n"), 0);
-	line = get_next_line(fd);
-	(*cub)->width = ft_strlen(line);
-	while (line)
+	y = 1;
+	while (map[y] && map[y + 1])
 	{
-		if (cm < 7)
+		x = 0;
+		while (map[y][x])
 		{
-			line = get_next_line(fd);
-			cm++;
-			continue ;
+			if (!check_space(map, y, x))
+				return (0);
+			x++;
 		}
-		if (!check_character(line))
-			return (printf("hnaaa33\n"), 0);
-		if (ft_strlen(line) > (size_t)(*cub)->width)
-			(*cub)->width = ft_strlen(line);
-		free(line);
-		line = get_next_line(fd);
-		(*cub)->height++;
+		y++;
 	}
-	close (fd);
 	return (1);
 }
 
-char *new_line(char *line, t_map **data)
+int	parss_map(char **map)
 {
-	int	i;
-	char *new_line;
-
-	i = 0;
-	new_line = malloc(sizeof(char *) *  ((*data)->width));
-	if (!new_line)
-		return (NULL);
-	if (line[ft_strlen(line) - 1] == '\n')
-		line[ft_strlen(line) - 1] = '\0';
-	while ((size_t)i < ft_strlen(line))
-	{
-		new_line[i] = line[i];
-		i++;
-	}
-	if (i < (*data)->width)
-	{
-		while (i < (*data)->width)
-		{
-			new_line[i] = ' ';
-			i++;
-		}
-	}
-	new_line[i] = '\0';
-	return (new_line);
-}
-
-int	allocate_map(char *map, t_map **data)
-{
-
-	int fd;
-	char *line;
-	int cm = 1;
-	int	i = 0;
-	if (!map_line(map, data))
-		return (printf("hnaaa11\n"), 0);
-	(*data)->data = malloc(sizeof(char *) * ((*data)->height + 1));
-	if (!(*data)->data)
-		return (printf("hnaaa12\n"), 0);
-	fd = open(map, O_RDONLY);
-	if (fd < 0)
-		return (0);
-	line = get_next_line(fd);
-	while (line)
-	{
-		if (cm < 7 || line[0] == '\n')
-		{
-			line = get_next_line(fd);
-			cm++;
-			continue ;
-		}
-		(*data)->data[i] = new_line(line, data);
-		if (!(*data)->data[i])
-			return (printf("hnaaa13\n"), 0);
-		i++;
-		free(line);
-		line = get_next_line(fd);
-	}
-	(*data)->data[(*data)->height] = NULL;
-	close (fd);
+	if (!check_walls(map))
+		return (printf("hello11\n"), 0);
+	if (check_num_character(map) != 1 )
+		return (printf("hello22\n"), 0);
+	if (!check_space_in_map(map))
+		return (printf("hello33\n"), 0);
 	return (1);
 }
+

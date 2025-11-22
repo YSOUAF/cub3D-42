@@ -5,9 +5,9 @@
 
 
 #include <stdio.h>
-# include <fcntl.h>
+#include <fcntl.h>
 #include <stdlib.h>
-#include "mlx.h"
+#include <stdint.h>
 #include <math.h>
 #include <unistd.h>
 # include "../lib/get_next_line/get_next_line.h"
@@ -28,6 +28,7 @@
 #define ROTATE_SPEED 0.05
 #define COLLISION_WALL 6
 #define FOV M_PI/3
+
 
 typedef struct s_data
 {
@@ -50,6 +51,7 @@ typedef struct s_player
 	double	angle;
 }	t_player;
 
+
 typedef struct s_map
 {
 	char	**data;
@@ -59,8 +61,8 @@ typedef struct s_map
 	char	*path_so;
 	char	*path_we;
 	char	*path_ea;
-	char	*color_f;
-	char	*color_c;
+	int32_t	color_f;
+	int32_t	color_c;
 }	t_map;
 
 typedef struct s_keys
@@ -94,14 +96,23 @@ typedef struct s_ray
 
 typedef struct s_cub3d
 {
-	t_player	player;
-	void		*mlx;
-	void		*win;
-	t_map		map;
-	t_data		img;
-	t_keys		keys;
-	t_ray		ray;
+	t_player		player;
+	void			*mlx;
+	void			*win;
+	t_map			map;
+	t_data			img;
+	t_keys			keys;
+	t_ray			ray;
+	t_data			data;
+	// mlx_texture_t	tex_no;
+	// mlx_texture_t	tex_so;
+	// mlx_texture_t	tex_we;
+	// mlx_texture_t	tex_no;
 
+	// t_data		tex_no;
+	// t_data		tex_so;
+	// t_data		tex_we;
+	// t_data		tex_ea;
 }	t_cub3d;
 
 
@@ -140,9 +151,30 @@ int is_ray_facing_left(double angle);
 
 
 size_t	ft_strlen(const char *s);
-int	ft_strncmp(const char *s1, const char *s2, size_t n);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
+int		ft_atoi(const char *str);
+char	**ft_split(char const *s, char c);
+char	*ft_strdup(const char *s1);
+void	*ft_calloc(size_t count, size_t size);
+void	*ft_memset(void *b, int c, size_t len);
+int		count(char const  *str, char c);
+int		ft_isdigit(int c);
+int		valid_num(const char *str);
+void	*ft_memcpy(void *dst, const void* src, size_t n);
 
 
-int check_ext(char *str);
-int	allocate_map(char *map, t_map **data);
+int		check_ext(char *str);
+int		allocate_map(char *map, t_map **data);
+int		parss_map(char **map);
+int		is_char_or_zero(char c);
+int		parse_texture(char *line, t_map *conf);
+char	*remove_newline(char *line);
+
+
+
+
+
+
+////
+void print_map(char **map_data);
 #endif 
