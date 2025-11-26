@@ -1,31 +1,34 @@
 #ifndef CUB3D_H
 #define CUB3D_H
 
+#include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
-#include <unistd.h>
 #include "../lib/get_next_line/get_next_line.h"
 #include <MLX42.h>
 
 
-# define M_PI 3.14159265358979323846
-# define M_PI_2 1.57079632679489661923
-// Window and game settings
+// # define M_PI 3.14159265358979323846
+// # define M_PI_2 1.57079632679489661923
+// // Window and game settings
 #define TILE_SIZE 32
-#define WIN_W (50 * TILE_SIZE)
-#define WIN_H (20 * TILE_SIZE)
+#define WIN_W (70 * TILE_SIZE)
+#define WIN_H (40 * TILE_SIZE)
 #define MOVE_SPEED 2
 #define ROTATE_SPEED 0.05
 #define COLLISION_WALL 6
 #define FOV (M_PI / 3)
+#define SIZE_MINIMAP_W 400
+#define SIZE_MINIMAP_H 200
 
 // Structures
 typedef struct s_data
 {
     mlx_image_t *img;  // Changed from void* to mlx_image_t*
+    mlx_image_t *img_mini;
 }   t_data;
 
 typedef struct s_point
@@ -95,10 +98,10 @@ typedef struct s_cub3d
     t_data      img;
     t_keys      keys;
     t_ray       ray;
-    mlx_texture_t *tex_no;     // Uncommented for textures
-    mlx_texture_t *tex_so;
-    mlx_texture_t *tex_we;
-    mlx_texture_t *tex_ea;
+    // mlx_texture_t *tex_no;     // Uncommented for textures
+    // mlx_texture_t *tex_so;
+    // mlx_texture_t *tex_we;
+    // mlx_texture_t *tex_ea;
 }   t_cub3d;
 
 // Rendering functions
@@ -117,11 +120,6 @@ t_point find_hor_inter(t_cub3d *cub, double ray_angle, int *found_wall);
 t_point find_vert_inter(t_cub3d *cub, double ray_angle, int *found_wall);
 
 // Ray direction helpers
-int     is_ray_facing_down(double angle);
-int     is_ray_facing_up(double angle);
-int     is_ray_facing_right(double angle);
-int     is_ray_facing_left(double angle);
-
 double max_ray_distance(double angle);
 int is_ray_facing_down(double angle);
 int is_ray_facing_up(double angle);

@@ -63,13 +63,13 @@ void draw_ray(t_cub3d *cub, int x)
         if (y >= top && y <= down)
         {
             if (cub->ray.drction == EAST)
-                mlx_put_pixel(cub->img.img, x, y, 0x3E3F29);
-            else if (cub->ray.drction == NORTH)
-                mlx_put_pixel(cub->img.img, x, y, 0x57564F);
+                mlx_put_pixel(cub->img.img, x, y, 0x3E3F29FF); // rendring dir hna function diyalk li at9aad 
+            else if (cub->ray.drction == NORTH) //ga3 data li m7taaj kina f ray fiha hit point o is_vertecal o drction
+                mlx_put_pixel(cub->img.img, x, y, 0x57564FFF);
             else if (cub->ray.drction == SOUTH)
-                mlx_put_pixel(cub->img.img, x, y, 0x7A7A73);
+                mlx_put_pixel(cub->img.img, x, y, 0x7A7A73FF);
             else if (cub->ray.drction == WEST)
-                mlx_put_pixel(cub->img.img, x, y, 0x0A400C);
+                mlx_put_pixel(cub->img.img, x, y, 0x0A400CFF);
         }
     }
 }

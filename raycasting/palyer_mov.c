@@ -52,14 +52,14 @@ void handle_rotation(t_cub3d *cub)
     if (cub->keys.left)
     {
         cub->player.angle -= ROTATE_SPEED;
-        if (cub->player.angle < 0)
-            cub->player.angle += 2 * M_PI;
+        // if (cub->player.angle < 0)
+            // cub->player.angle += 2 * M_PI;
     }
     if (cub->keys.right)
     {
         cub->player.angle += ROTATE_SPEED;
-        if (cub->player.angle >= 2 * M_PI)
-            cub->player.angle -= 2 * M_PI;
+        // if (cub->player.angle >= 2 * M_PI)
+            // cub->player.angle -= 2 * M_PI;
     }
 }
 void update_player_position(t_cub3d *cub)
@@ -68,7 +68,6 @@ void update_player_position(t_cub3d *cub)
     double new_y;
     double temp_x;
     double temp_y;
-printf("%f , %f\n", cub->player.pos.x , cub->player.pos.y);
     new_x = cub->player.pos.x;
     new_y = cub->player.pos.y;
     temp_x = new_x;
@@ -81,4 +80,3 @@ printf("%f , %f\n", cub->player.pos.x , cub->player.pos.y);
     if (is_valid_position(cub, temp_x, new_y))
         cub->player.pos.y = new_y;
 }
-

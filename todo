@@ -6,6 +6,14 @@ parss_map; check walls and number charter in map (N, E, S, W) and space for (0) 
 
 
 
+parss map : 
+fACH kikon empty line khassk takhd li akbar star fihom olakhrin li khawyiyin t3mrhom li b spaces 7itach kat segfaulti andi ana fach kaybghi it7ark palyer okil9a ma 1 ma 0 ma spaces 
+ 
+ texturing :
+ sir l set_Rays atl9a tma function fin khassk t7t walls diyalk 
+ 
+
+
 
 
 
