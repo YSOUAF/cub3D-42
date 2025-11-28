@@ -18,7 +18,7 @@
 #define WIN_W (70 * TILE_SIZE)
 #define WIN_H (40 * TILE_SIZE)
 #define MOVE_SPEED 2
-#define ROTATE_SPEED 0.05
+#define ROTATE_SPEED 0.1
 #define COLLISION_WALL 6
 #define FOV (M_PI / 3)
 #define SIZE_MINIMAP_W 400
@@ -140,6 +140,10 @@ int     is_wall(t_cub3d *cub, int map_x, int map_y);
 int     allocate_map(char *map, t_map **data);
 int     parss_map(char **map);
 void    print_map(char **map_data);
+int     is_map_star(char *line);
+int     check_character(char *line);
+int     check_num_character(char **map);
+int     check_walls(char **map);
 
 // MLX and hooks
 void    init_mlx(t_cub3d *cub);
@@ -152,7 +156,7 @@ double  normlize_angle(double angle);
 double  calculate_distance(t_point p1, t_point p2);
 int     check_ext(char *str);
 int     is_char_or_zero(char c);
-int     parse_texture(char *line, t_map *conf);
+int     parse_texture(char *line, t_map *conf, int i);
 char    *remove_newline(char *line);
 
 // Libft functions
@@ -167,5 +171,6 @@ int     count(char const *str, char c);
 int     ft_isdigit(int c);
 int     valid_num(const char *str);
 void    *ft_memcpy(void *dst, const void *src, size_t n);
+void     free_arr (char **str);
 
 #endif

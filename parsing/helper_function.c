@@ -6,7 +6,7 @@
 /*   By: mozinedd <mozinedd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/13 22:32:34 by mozinedd          #+#    #+#             */
-/*   Updated: 2025/10/13 22:35:06 by mozinedd         ###   ########.fr       */
+/*   Updated: 2025/11/27 19:57:28 by mozinedd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ char	*remove_newline(char *line)
 	return (line);
 }
 
-int check_ext(char *str)
+int	check_ext(char *str)
 {
-	int len;
-	
+	int	len;
+
 	len = ft_strlen(str);
 	if (ft_strncmp((str + (len - 4)), ".cub", 4) != 0)
 		return (0);

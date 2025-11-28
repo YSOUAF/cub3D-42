@@ -64,4 +64,5 @@ void setup_hooks(t_cub3d *cub)
     
     // Close hook (optional, ESC already handled in key_press)
     mlx_close_hook(cub->mlx, close_hook, cub);
+
 }
