@@ -6,7 +6,7 @@
 /*   By: mozinedd <mozinedd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 11:42:19 by ysouaf            #+#    #+#             */
-/*   Updated: 2025/11/27 19:39:08 by mozinedd         ###   ########.fr       */
+/*   Updated: 2025/11/29 23:22:11 by mozinedd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,14 +120,14 @@ void	cleanup(t_cub3d *cub)
 	
 }
 
-static int	inits_map(t_map **map, char *path)
+static int	inits_map(t_map *map, char *path)
 {
-	ft_memset(*map, 0, sizeof(t_map));
-	if (!allocate_map(path, map) || !(*map)->height)
+	ft_memset(map, 0, sizeof(t_map));
+	if (!allocate_map(path, map) || !map->height)
 		return (printf("Error:\ninvalid map - failed to load\n"), 0);
-	if (!parss_map((*map)->data))
+	if (!parss_map(map->data))
 		return (printf("Error:\ninvalid map - validation failed\n"), 0);
-	if (!find_player_position(*map))
+	if (!find_player_position(map))
 		return (printf("Error:\nno player position found in map\n"), 0);
 	return (1);
 }
@@ -135,27 +135,31 @@ static int	inits_map(t_map **map, char *path)
 int	main(int ac, char **av)
 {
 	t_map		*map;
-	t_cub3d		cub;
+	t_cub3d		*cub;
+
 
 	if (ac != 2 || !check_ext(av[1]))
 		return (printf("Error:\ninvalid ext or num arg\n"), 1);
 	map = malloc(sizeof(t_map));
 	if (!map)
 		return (printf("Error:\nallocation struct failed\n"), 1);
-	if (!inits_map(&map, av[1]))
+	if (!inits_map(map, av[1]))
 		return (free_map(map), free(map), 1);
-	ft_memset(&cub, 0, sizeof(t_cub3d));
-	cub.map = *map;
-	init_player(&cub);
-	init_mlx(&cub);
-	if (!cub.mlx)
+
+	cub = malloc(sizeof(t_cub3d));
+	ft_memset(cub, 0, sizeof(t_cub3d));
+	cub->map = *map;
+	load_texture(cub);
+	init_player(cub);
+	init_mlx(cub);
+	if (!cub->mlx)
 	{
 		free(map);
 		return (printf("Error:\nMLX initialization failed\n"), 1);
 	}
-	setup_hooks(&cub);
-	mlx_loop(cub.mlx);
-	cleanup(&cub);
+	setup_hooks(cub);
+	mlx_loop(cub->mlx);
+	cleanup(cub);
 	free(map);
 	return (0);
 }

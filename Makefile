@@ -18,7 +18,7 @@ SRCS_RAYCAST = raycasting/help_func.c raycasting/hooks.c \
 
 SRC_PARS = parsing/pars_map.c parsing/utilis_map.c parsing/pars_tex_fc.c $(GNL_DIR)/get_next_line.c $(GNL_DIR)/get_next_line_utils.c \
 	lib/ft_strlen.c lib/ft_strncmp.c lib/ft_split.c lib/ft_atoi.c lib/ft_strdup.c lib/ft_calloc.c lib/ft_memcpy.c \
-	lib/ft_memset.c lib/is_digit.c lib/valid_num.c parsing/helper_function.c parsing/check_space.c
+	lib/ft_memset.c lib/is_digit.c lib/valid_num.c parsing/helper_function.c parsing/check_space.c texture/load_texture.c
 
 SRCS = ${SRC_PARS} ${SRCS_RAYCAST}
 OBJS = $(SRCS:%.c=%.o)

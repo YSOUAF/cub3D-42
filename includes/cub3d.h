@@ -15,10 +15,10 @@
 // # define M_PI_2 1.57079632679489661923
 // // Window and game settings
 #define TILE_SIZE 32
-#define WIN_W (70 * TILE_SIZE)
-#define WIN_H (40 * TILE_SIZE)
-#define MOVE_SPEED 2
-#define ROTATE_SPEED 0.1
+#define WIN_W (50 * TILE_SIZE)
+#define WIN_H (20 * TILE_SIZE)
+#define MOVE_SPEED 4
+#define ROTATE_SPEED 0.05
 #define COLLISION_WALL 6
 #define FOV (M_PI / 3)
 #define SIZE_MINIMAP_W 400
@@ -98,10 +98,11 @@ typedef struct s_cub3d
     t_data      img;
     t_keys      keys;
     t_ray       ray;
-    // mlx_texture_t *tex_no;     // Uncommented for textures
-    // mlx_texture_t *tex_so;
-    // mlx_texture_t *tex_we;
-    // mlx_texture_t *tex_ea;
+    t_data      *data;
+    mlx_texture_t *tex_no;     // Uncommented for textures
+    mlx_texture_t *tex_so;
+    mlx_texture_t *tex_we;
+    mlx_texture_t *tex_ea;
 }   t_cub3d;
 
 // Rendering functions
@@ -137,7 +138,7 @@ int     is_valid_position(t_cub3d *cub, double new_x, double new_y);
 // Map functions
 void    init_map(t_cub3d *cub);
 int     is_wall(t_cub3d *cub, int map_x, int map_y);
-int     allocate_map(char *map, t_map **data);
+int     allocate_map(char *map, t_map *data);
 int     parss_map(char **map);
 void    print_map(char **map_data);
 int     is_map_star(char *line);
@@ -172,5 +173,8 @@ int     ft_isdigit(int c);
 int     valid_num(const char *str);
 void    *ft_memcpy(void *dst, const void *src, size_t n);
 void     free_arr (char **str);
+uint32_t	prgba(uint32_t r, uint32_t g, uint32_t b, uint32_t a);
+void	draw_walls(t_cub3d *cub, int screen_x, double line_height);
+int     load_texture(t_cub3d *data);
 
 #endif

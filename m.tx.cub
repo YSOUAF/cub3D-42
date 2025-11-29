@@ -1,10 +1,9 @@
-
-NO ./path_to_the_north_texture
+NO ./download.png
 C 100,30,1
-SO ./path_to_the_south_texture
+SO ./download.png
 F 100,100,6
-WE ./path_to_the_west_texture
-EA ./path_to_the_east_texture
+WE ./download.png
+EA ./download.png
 
 11111111111111111111
 100000000000000000001

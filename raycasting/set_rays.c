@@ -58,20 +58,24 @@ void draw_ray(t_cub3d *cub, int x)
     h = (d_towin * TILE_SIZE ) / cub->ray.distance;
     top = (WIN_H - h) / 2;
     down = (WIN_H + h) / 2;
-    for (int y = 0; y < WIN_H; y++)
-    {
-        if (y >= top && y <= down)
-        {
-            if (cub->ray.drction == EAST)
-                mlx_put_pixel(cub->img.img, x, y, 0x3E3F29FF); // rendring dir hna function diyalk li at9aad 
-            else if (cub->ray.drction == NORTH) //ga3 data li m7taaj kina f ray fiha hit point o is_vertecal o drction
-                mlx_put_pixel(cub->img.img, x, y, 0x57564FFF);
-            else if (cub->ray.drction == SOUTH)
-                mlx_put_pixel(cub->img.img, x, y, 0x7A7A73FF);
-            else if (cub->ray.drction == WEST)
-                mlx_put_pixel(cub->img.img, x, y, 0x0A400CFF);
-        }
-    }
+
+	
+
+    draw_walls(cub, x, h);
+    // for (int y = 0; y < WIN_H; y++)
+    // {
+    //     if (y >= top && y <= down)
+    //     {
+    //         if (cub->ray.drction == EAST)
+    //             mlx_put_pixel(cub->img.img, x, y, 0x3E3F29FF); // rendring dir hna function diyalk li at9aad 
+    //         else if (cub->ray.drction == NORTH) //ga3 data li m7taaj kina f ray fiha hit point o is_vertecal o drction
+    //             mlx_put_pixel(cub->img.img, x, y, 0x57564FFF);
+    //         else if (cub->ray.drction == SOUTH)
+    //             mlx_put_pixel(cub->img.img, x, y, 0x7A7A73FF);
+    //         else if (cub->ray.drction == WEST)
+    //             mlx_put_pixel(cub->img.img, x, y, 0x0A400CFF);
+    //     }
+    // }
 }
 
 void cast_all_rays(t_cub3d *cub)
@@ -79,9 +83,10 @@ void cast_all_rays(t_cub3d *cub)
     double ray_angle;
     double angle_step;
 
-    angle_step = (double)(FOV/WIN_W);
+    angle_step = (double)(FOV / WIN_W);
     ray_angle = cub->player.angle - (FOV/2);
     double x= 0;
+
     while(x < WIN_W)
     {
         cast_ray(cub, ray_angle);
