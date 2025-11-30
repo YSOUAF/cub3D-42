@@ -1,9 +1,10 @@
-NO ./download.png
-C 100,30,1
+NO ./simo.png
 SO ./download.png
-F 100,100,6
-WE ./download.png
+WE ./simo.png
 EA ./download.png
+
+C 0,255,0
+F 255,0,0
 
 11111111111111111111
 100000000000000000001

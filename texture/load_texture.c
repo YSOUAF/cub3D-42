@@ -6,7 +6,7 @@
 /*   By: mozinedd <mozinedd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 19:52:22 by mozinedd          #+#    #+#             */
-/*   Updated: 2025/11/30 18:40:01 by mozinedd         ###   ########.fr       */
+/*   Updated: 2025/11/30 18:50:59 by mozinedd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,27 +59,24 @@ int load_texture(t_cub3d *data)
 }
 
 
-mlx_texture_t   *choose_tex(t_ray ray, t_cub3d *data)
+mlx_texture_t *choose_tex(t_ray ray, t_cub3d *data)
+
 {
-    mlx_texture_t *tex = NULL;
 
-    if (ray.is_vertical)
-        tex = (ray.drction == NORTH) ? data->tex_no : data->tex_so;
-    else
-        tex = (ray.drction == EAST) ? data->tex_ea : data->tex_we;
-
-    // CRITICAL CHECK: If texture loading failed, this prevents a crash.
-    // You should have already exited gracefully in main if textures failed,
-    // but this is a final defensive check.
-    if (tex == NULL)
-    {
-        // Handle error (e.g., return a default placeholder texture, or log an error)
-        fprintf(stderr, "Error: Selected texture is NULL for direction %d.\n", ray.drction);
-        // In a production environment, you would typically exit or return a default texture here.
-        // Since this is a SEGV, your main loop is running with failed textures.
-        exit(1); // Exit gracefully if you know the texture should be loaded.
-    }
-    return (tex);
+	if (ray.is_vertical)
+	{
+		if (ray.drction == NORTH)
+		return (data->tex_no);
+		else
+		return (data->tex_so);
+	}
+	else
+	{
+		if (ray.drction == EAST )
+		return (data->tex_ea);
+		else
+		return (data->tex_we);
+	}
 }
 
 int	find_textur_x(mlx_texture_t *tex, t_ray ray)
@@ -105,6 +102,13 @@ uint32_t	sample_rgba(mlx_texture_t *tex, int x, int y)
 
 	p = tex->pixels + (y * tex->width + x) * tex->bytes_per_pixel;
 	return (prgba(p[0], p[1], p[2], p[3]));
+}
+
+void	draw_pixel(t_cub3d *cub, int x, int y, int color)
+{
+	if (x < 0 || y < 0 || x > WIN_W || y > WIN_H)
+		return ;
+	mlx_put_pixel(cub->img.img, x, y, color);
 }
 
 void	draw_walls(t_cub3d *cub, int screen_x, double line_height)
@@ -133,9 +137,14 @@ void	draw_walls(t_cub3d *cub, int screen_x, double line_height)
 		from_top = (double)y - wall_top;
 		double calc = from_top / line_height;
 		ty = (int)(calc * (double)tex->height);
+		if (ty < 0)
+			ty = 0;
+		if (ty >= (int)tex->height)
+			ty = (int)tex->height - 1;
 		color = sample_rgba(tex, tx, ty);
-		mlx_put_pixel(cub->img.img, screen_x, y, color);
-		printf("%d\n", (int)tex->height);
+		if (screen_x < 0)
+			screen_x = 0;
+		draw_pixel(cub, screen_x, y, color);
 		y++;
 	}
 }

@@ -121,9 +121,9 @@ static void	draw_background(t_cub3d *cub)
 		while (y < WIN_H)
 		{
 			if (y <= WIN_H / 2)
-				mlx_put_pixel(cub->img.img, x, y, cub->map.color_f);
-			else
 				mlx_put_pixel(cub->img.img, x, y, cub->map.color_c);
+			else
+				mlx_put_pixel(cub->img.img, x, y, cub->map.color_f);
 			y++;
 		}
 		x++;
