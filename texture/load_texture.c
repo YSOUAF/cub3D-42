@@ -6,7 +6,7 @@
 /*   By: mozinedd <mozinedd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 19:52:22 by mozinedd          #+#    #+#             */
-/*   Updated: 2025/11/29 23:23:48 by mozinedd         ###   ########.fr       */
+/*   Updated: 2025/11/30 18:40:01 by mozinedd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ int	find_textur_x(mlx_texture_t *tex, t_ray ray)
 		modelu = fmod(ray.hit_point.y, (double)TILE_SIZE);
 	else
 		modelu = fmod(ray.hit_point.x, (double)TILE_SIZE);
-	textur_x = (int)((modelu / TILE_SIZE) * (double)tex->width);
+	textur_x = (int)((modelu / (double)TILE_SIZE) * (double)tex->width);
 	if (textur_x < 0)
 		textur_x = 0;
 	if (textur_x >= (int)tex->width)
@@ -116,25 +116,26 @@ void	draw_walls(t_cub3d *cub, int screen_x, double line_height)
 	int y;
 	int top;
 	int buttom;
-	int	from_top;
+	double	from_top;
 	int	ty;
 	uint32_t color;
 
 	wall_top = (WIN_H / 2) - (line_height / 2);
 	wall_buttom = wall_top + line_height;
+	top = (int)wall_top;
+	buttom = (int)wall_buttom;
 	
 	tex = choose_tex(cub->ray, cub);
 	tx = find_textur_x(tex, cub->ray);
-	top = (int)wall_top;
-	buttom = (int)wall_buttom;
 	y = top;
-
 	while (y < buttom)
 	{
-		from_top = y - wall_top;
-		ty = (from_top / (int)line_height) * tex->height;
+		from_top = (double)y - wall_top;
+		double calc = from_top / line_height;
+		ty = (int)(calc * (double)tex->height);
 		color = sample_rgba(tex, tx, ty);
 		mlx_put_pixel(cub->img.img, screen_x, y, color);
+		printf("%d\n", (int)tex->height);
 		y++;
 	}
 }
