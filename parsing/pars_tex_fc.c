@@ -6,7 +6,7 @@
 /*   By: mozinedd <mozinedd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/28 17:28:56 by mozinedd          #+#    #+#             */
-/*   Updated: 2025/11/29 22:46:30 by mozinedd         ###   ########.fr       */
+/*   Updated: 2025/12/02 21:04:35 by mozinedd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,27 +70,15 @@ int	parse_texture(char *line, t_map *conf, int i)
 		return (1);
 	splite_str = ft_split(&line[i], ' ');
 	if (count(line, ' ') != 2)
-		return (0);
+		return (free_arr(splite_str), 0);
 	if (!conf->path_no && ft_strncmp(&line[i], "NO ", 3) == 0)
-	{
 		conf->path_no = ft_strdup(splite_str[1]);
-		// printf("no line: %s\n", conf->path_no);
-	}
 	else if (!conf->path_so && ft_strncmp(&line[i], "SO ", 3) == 0)
-	{
 		conf->path_so = ft_strdup(splite_str[1]);
-		// printf("so line: %s\n", conf->path_so);
-	}
 	else if (!conf->path_we && ft_strncmp(&line[i], "WE ", 3) == 0)
-	{
 		conf->path_we = ft_strdup(splite_str[1]);
-		// printf("we line: %s\n", conf->path_we);
-	}
 	else if (!conf->path_ea && ft_strncmp(&line[i], "EA ", 3) == 0)
-	{
 		conf->path_ea = ft_strdup(splite_str[1]);
-		// printf("ea line: %s\n", conf->path_ea);
-	}
 	else if (conf->color_f == -1 && ft_strncmp(&line[i], "F ", 2) == 0)
 		parse_color(&line[i], conf, 0);
 	else if (conf->color_c == -1 && ft_strncmp(line, "C ", 2) == 0)

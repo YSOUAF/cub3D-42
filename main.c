@@ -6,26 +6,11 @@
 /*   By: mozinedd <mozinedd@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 11:42:19 by ysouaf            #+#    #+#             */
-/*   Updated: 2025/11/29 23:22:11 by mozinedd         ###   ########.fr       */
+/*   Updated: 2025/12/02 21:24:21 by mozinedd         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-void	free_arr(char **str)
-{
-	int	i;
-
-	i = 0;
-	if (!str)
-		return ;
-	while (str[i])
-	{
-		free(str[i]);
-		i++;
-	}
-	free(str);
-}
 
 static void	set_player_angle(t_map *map, char c)
 {
@@ -44,7 +29,6 @@ static void	set_player_position(t_map *map, int i, int j)
 	map->posX = (j * TILE_SIZE) + (TILE_SIZE / 2.0);
 	map->posY = (i * TILE_SIZE) + (TILE_SIZE / 2.0);
 	set_player_angle(map, map->data[i][j]);
-	map->data[i][j] = '0';
 }
 
 int	find_player_position(t_map *map)
@@ -71,55 +55,6 @@ int	find_player_position(t_map *map)
 	return (0);
 }
 
-void	print_map(char **map_data)
-{
-	int	i;
-
-	i = 0;
-	if (!map_data)
-	{
-		printf("map_data is NULL\n");
-		return ;
-	}
-	while (map_data[i])
-	{
-		printf("[%s]\n", map_data[i]);
-		i++;
-	}
-	printf("-- end of map (%d lines) --\n", i);
-}
-
-void	free_map(t_map *map)
-{
-	int		i;
-
-	i = 0;
-	if (!map || !map->data)
-        return ;
-	while (map->data[i])
-	{
-		free(map->data[i]);
-		i++;
-	}
-	free(map->data);
-}
-
-void	cleanup(t_cub3d *cub)
-{
-	int	i;
-
-	i = 0;
-	t_map map = cub->map;
-	free_map(&map);
-	if (cub->mlx)
-	{
-		if (cub->img.img)
-			mlx_delete_image(cub->mlx, cub->img.img);
-		mlx_terminate(cub->mlx);
-	}
-	
-}
-
 static int	inits_map(t_map *map, char *path)
 {
 	ft_memset(map, 0, sizeof(t_map));
@@ -137,29 +72,26 @@ int	main(int ac, char **av)
 	t_map		*map;
 	t_cub3d		*cub;
 
-
 	if (ac != 2 || !check_ext(av[1]))
 		return (printf("Error:\ninvalid ext or num arg\n"), 1);
 	map = malloc(sizeof(t_map));
 	if (!map)
 		return (printf("Error:\nallocation struct failed\n"), 1);
 	if (!inits_map(map, av[1]))
-		return (free_map(map), free(map), 1);
-
+		return (free_paths(map), free_map(map), free(map), 1);
 	cub = malloc(sizeof(t_cub3d));
+	if (!cub)
+		return (printf("Error:\nallocation struct failed\n"),
+			free_map(map), free(map), 1);
 	ft_memset(cub, 0, sizeof(t_cub3d));
 	cub->map = *map;
-	load_texture(cub);
+	if (!load_texture(cub))
+		return (cleanup(cub), 1);
 	init_player(cub);
-	init_mlx(cub);
-	if (!cub->mlx)
-	{
-		free(map);
-		return (printf("Error:\nMLX initialization failed\n"), 1);
-	}
+	if (!init_mlx(cub))
+		return (printf("Error:\nMLX initialization failed\n"), cleanup(cub), 1);
 	setup_hooks(cub);
 	mlx_loop(cub->mlx);
 	cleanup(cub);
-	free(map);
 	return (0);
 }

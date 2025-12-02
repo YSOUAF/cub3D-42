@@ -105,6 +105,21 @@ typedef struct s_cub3d
     mlx_texture_t *tex_ea;
 }   t_cub3d;
 
+typedef struct s_draw_wals
+{
+	double			wall_top;
+	double			wall_buttom;
+	mlx_texture_t	*tex;
+	int				tx;
+	int				y;
+	int				top;
+	int				buttom;
+	int				ty;
+	uint32_t		color;
+	double			from_top;
+	double			calc;
+}	t_draw_wals;
+
 // Rendering functions
 void    render_map(void *ptr);
 void    render_tiles(t_cub3d *cub);
@@ -146,8 +161,8 @@ int     check_character(char *line);
 int     check_num_character(char **map);
 int     check_walls(char **map);
 
-// MLX and hooks
-void    init_mlx(t_cub3d *cub);
+// MLX and hook
+int	init_mlx(t_cub3d *cub);
 void    setup_hooks(t_cub3d *cub);
 void    key_press(mlx_key_data_t keydata, void *ptr);
 void    close_hook(void *ptr);
@@ -176,5 +191,9 @@ void     free_arr (char **str);
 uint32_t	prgba(uint32_t r, uint32_t g, uint32_t b, uint32_t a);
 void	draw_walls(t_cub3d *cub, int screen_x, double line_height);
 int     load_texture(t_cub3d *data);
-
+void	draw_pixel(t_cub3d *cub, int x, int y, int color);
+void	destroy_texture(t_cub3d *data);
+void	free_map(t_map *map);
+void	cleanup(t_cub3d *cub);
+void	free_paths(t_map *map);
 #endif

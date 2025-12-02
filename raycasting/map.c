@@ -67,6 +67,11 @@ static void	draw_player_dot(t_cub3d *cub)
 static void	put_minimap_pixel(t_cub3d *cub, int x, int y,
 	int in_x, int in_y)
 {
+	(void)cub;
+	(void)in_x;
+	(void)in_y;
+	(void)y;
+	(void)x;
 	if (in_x < 0 || in_y < 0 || in_x > cub->map.width
 		|| in_y > cub->map.height)
 		mlx_put_pixel(cub->img.img_mini, x, y, 0xE3E3E3FF);
@@ -138,7 +143,7 @@ void	render_map(void *ptr)
 	update_player_position(cub);
 	draw_background(cub);
 	cast_all_rays(cub);
-	mini_map(cub);
+	// mini_map(cub);
 	mlx_image_to_window(cub->mlx, cub->img.img_mini, 50, 50);
 	mlx_image_to_window(cub->mlx, cub->img.img, 0, 0);
 }
