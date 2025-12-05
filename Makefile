@@ -14,7 +14,8 @@ SRCS_RAYCAST = raycasting/help_func.c raycasting/hooks.c \
 		raycasting/horizental2d.c raycasting/init_mlx.c \
 		raycasting/map.c raycasting/palyer_mov.c \
 		raycasting/set_player.c raycasting/set_rays.c \
-		raycasting/vertical2d.c main.c raycasting/facing.c
+		raycasting/vertical2d.c main.c raycasting/facing.c \
+		raycasting/set_rays2.c raycasting/player_mov2.c
 
 SRC_PARS = parsing/pars_map.c parsing/utilis_map.c parsing/pars_tex_fc.c $(GNL_DIR)/get_next_line.c $(GNL_DIR)/get_next_line_utils.c \
 	lib/ft_strlen.c lib/ft_strncmp.c lib/ft_split.c lib/ft_atoi.c lib/ft_strdup.c lib/ft_calloc.c lib/ft_memcpy.c \

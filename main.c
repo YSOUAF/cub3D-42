@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mozinedd <mozinedd@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ysouaf <ysouaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 11:42:19 by ysouaf            #+#    #+#             */
-/*   Updated: 2025/12/02 21:24:21 by mozinedd         ###   ########.fr       */
+/*   Updated: 2025/12/05 17:06:09 by ysouaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ static void	set_player_angle(t_map *map, char c)
 
 static void	set_player_position(t_map *map, int i, int j)
 {
-	map->posX = (j * TILE_SIZE) + (TILE_SIZE / 2.0);
-	map->posY = (i * TILE_SIZE) + (TILE_SIZE / 2.0);
+	map->pos_x = (j * TILE_SIZE) + (TILE_SIZE / 2.0);
+	map->pos_y = (i * TILE_SIZE) + (TILE_SIZE / 2.0);
 	set_player_angle(map, map->data[i][j]);
 }
 

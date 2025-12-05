@@ -1,27 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_mlx.c                                         :+:      :+:    :+:   */
+/*   player_mov2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ysouaf <ysouaf@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/26 11:36:47 by ysouaf            #+#    #+#             */
-/*   Updated: 2025/12/05 16:07:27 by ysouaf           ###   ########.fr       */
+/*   Created: 2025/12/05 15:51:49 by ysouaf            #+#    #+#             */
+/*   Updated: 2025/12/05 15:51:53 by ysouaf           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	init_mlx(t_cub3d *cub)
+void	update_player_position(t_cub3d *cub)
 {
-	cub->mlx = mlx_init(WIN_W, WIN_H, "cub3d", false);
-	if (!cub->mlx)
-		return (0);
-	cub->img.img = mlx_new_image(cub->mlx, WIN_W, WIN_H);
-	if (!cub->img.img)
-		return (0);
-	cub->img.img_mini = mlx_new_image(cub->mlx, 400, 200);
-	if (!cub->img.img_mini)
-		return (0);
-	return (1);
+	double	nx;
+	double	ny;
+	double	px;
+	double	py;
+
+	px = cub->player.pos.x;
+	py = cub->player.pos.y;
+	nx = px;
+	ny = py;
+	handle_forward_backward(cub, &nx, &ny);
+	handle_strafe(cub, &nx, &ny);
+	handle_rotation(cub);
+	if (is_valid_position(cub, nx, py))
+		cub->player.pos.x = nx;
+	if (is_valid_position(cub, px, ny))
+		cub->player.pos.y = ny;
 }

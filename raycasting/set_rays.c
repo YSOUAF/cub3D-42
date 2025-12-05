@@ -1,97 +1,68 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   set_rays.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysouaf <ysouaf@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/05 15:38:05 by ysouaf            #+#    #+#             */
+/*   Updated: 2025/12/05 15:45:00 by ysouaf           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-void cast_ray(t_cub3d *cub, double ray_angle)
+static void	set_hor_hit(t_cub3d *cub, double d, t_point hit, double ang)
 {
-    t_point hor_hit, ver_hit;
-    double hor_dis, ver_dis;
-    int found_hor, found_ver;
-
-    cub->ray.angle = ray_angle;
-    cub->ray.hit_wall = 0;
-    cub->ray.distance = max_ray_distance(ray_angle);
-    cub->ray.is_vertical = 0;
-    ray_angle = normlize_angle(ray_angle);
-    hor_hit = find_hor_inter(cub, ray_angle, &found_hor);
-    ver_hit = find_vert_inter(cub, ray_angle, &found_ver);
-    hor_dis = 0;
-    ver_dis = 0;
-    if(found_hor)
-        hor_dis = calculate_distance(cub->player.pos, hor_hit);
-    if(found_ver)
-        ver_dis = calculate_distance(cub->player.pos, ver_hit);
-    if(found_hor &&( !found_ver || hor_dis < ver_dis))
-    {
-        cub->ray.distance = hor_dis;                                                                    
-        cub->ray.hit_point = hor_hit;
-        cub->ray.hit_wall = 1;
-        cub->ray.is_vertical = 0;
-        if(sin(ray_angle) < 0)
-            cub->ray.drction = NORTH;
-        else 
-            cub->ray.drction = SOUTH;
-    }
-    else if(found_ver)
-    {
-        cub->ray.distance = ver_dis;
-        cub->ray.hit_point = ver_hit;
-        cub->ray.hit_wall = 1;
-        cub->ray.is_vertical = 1;
-        if(cos(ray_angle) > 0)
-            cub->ray.drction = EAST;
-        else 
-            cub->ray.drction = WEST;
-    }
+	cub->ray.distance = d;
+	cub->ray.hit_point = hit;
+	cub->ray.hit_wall = 1;
+	cub->ray.is_vertical = 0;
+	if (sin(ang) < 0)
+		cub->ray.drction = NORTH;
+	else
+		cub->ray.drction = SOUTH;
 }
 
-void draw_ray(t_cub3d *cub, int x)
+static void	set_ver_hit(t_cub3d *cub, double d, t_point hit, double ang)
 {
-    double h;
-    double d_ofwin;
-    double angle_x;
-    double d_towin;
-    int top;
-    int down;
-
-    angle_x = fabs(cub->ray.angle - cub->player.angle);
-    d_ofwin = fabs(x - (double)WIN_W / 2);
-    d_towin = (WIN_W / 2) / tan(FOV / 2) / cos(angle_x);
-    h = (d_towin * TILE_SIZE ) / cub->ray.distance;
-    top = (WIN_H - h) / 2;
-    down = (WIN_H + h) / 2;
-
-	
-
-    draw_walls(cub, x, h);
-    // for (int y = 0; y < WIN_H; y++)
-    // {
-    //     if (y >= top && y <= down)
-    //     {
-    //         if (cub->ray.drction == EAST)
-    //             mlx_put_pixel(cub->img.img, x, y, 0x3E3F29FF); // rendring dir hna function diyalk li at9aad 
-    //         else if (cub->ray.drction == NORTH) //ga3 data li m7taaj kina f ray fiha hit point o is_vertecal o drction
-    //             mlx_put_pixel(cub->img.img, x, y, 0x57564FFF);
-    //         else if (cub->ray.drction == SOUTH)
-    //             mlx_put_pixel(cub->img.img, x, y, 0x7A7A73FF);
-    //         else if (cub->ray.drction == WEST)
-    //             mlx_put_pixel(cub->img.img, x, y, 0x0A400CFF);
-    //     }
-    // }
+	cub->ray.distance = d;
+	cub->ray.hit_point = hit;
+	cub->ray.hit_wall = 1;
+	cub->ray.is_vertical = 1;
+	if (cos(ang) > 0)
+		cub->ray.drction = EAST;
+	else
+		cub->ray.drction = WEST;
 }
 
-void cast_all_rays(t_cub3d *cub)
+static void	select_hit(t_cub3d *cub, t_point hor, t_point ver,
+		double angle)
 {
-    double ray_angle;
-    double angle_step;
+	double	hd;
+	double	vd;
 
-    angle_step = (double)(FOV / WIN_W);
-    ray_angle = cub->player.angle - (FOV/2);
-    double x= 0;
+	hd = 0;
+	vd = 0;
+	if (cub->flags.hor_found)
+		hd = calculate_distance(cub->player.pos, hor);
+	if (cub->flags.ver_found)
+		vd = calculate_distance(cub->player.pos, ver);
+	if (cub->flags.hor_found && (!cub->flags.ver_found || hd < vd))
+		set_hor_hit(cub, hd, hor, angle);
+	else if (cub->flags.ver_found)
+		set_ver_hit(cub, vd, ver, angle);
+}
 
-    while(x < WIN_W)
-    {
-        cast_ray(cub, ray_angle);
-        draw_ray(cub, x);
-        ray_angle+= angle_step;
-        x++;
-    }
+void	cast_ray(t_cub3d *cub, double angle)
+{
+	t_point	hor;
+	t_point	ver;
+
+	cub->ray.hit_wall = 0;
+	angle = normlize_angle(angle);
+	cub->ray.angle = angle;
+	hor = find_hor_inter(cub, angle, &cub->flags.hor_found);
+	ver = find_vert_inter(cub, angle, &cub->flags.ver_found);
+	select_hit(cub, hor, ver, angle);
 }

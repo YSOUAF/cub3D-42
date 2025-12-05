@@ -1,82 +1,83 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   palyer_mov.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysouaf <ysouaf@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/05 15:51:00 by ysouaf            #+#    #+#             */
+/*   Updated: 2025/12/05 15:53:21 by ysouaf           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-int is_valid_position(t_cub3d *cub, double new_x, double new_y)
+static int	check_collision(t_cub3d *cub, int cx, int cy)
 {
-    int player_x;
-    int player_y;
+	if (is_wall(cub, (cx - COLLISION_WALL) / TILE_SIZE,
+			(cy - COLLISION_WALL) / TILE_SIZE))
+		return (0);
+	if (is_wall(cub, (cx + COLLISION_WALL) / TILE_SIZE,
+			(cy - COLLISION_WALL) / TILE_SIZE))
+		return (0);
+	if (is_wall(cub, (cx - COLLISION_WALL) / TILE_SIZE,
+			(cy + COLLISION_WALL) / TILE_SIZE))
+		return (0);
+	if (is_wall(cub, (cx + COLLISION_WALL) / TILE_SIZE,
+			(cy + COLLISION_WALL) / TILE_SIZE))
+		return (0);
+	return (1);
+}
 
-    player_x = (int)new_x;
-    player_y = (int)new_y;
-    if (is_wall(cub, (player_x - COLLISION_WALL) / TILE_SIZE,
-                (player_y - COLLISION_WALL) / TILE_SIZE))
-        return (0);
-    if (is_wall(cub, (player_x + COLLISION_WALL) / TILE_SIZE,
-                (player_y - COLLISION_WALL) / TILE_SIZE))
-        return (0);
-    if (is_wall(cub, (player_x - COLLISION_WALL) / TILE_SIZE,
-                (player_y + COLLISION_WALL) / TILE_SIZE))
-        return (0);
-    if (is_wall(cub, (player_x + COLLISION_WALL) / TILE_SIZE,
-                (player_y + COLLISION_WALL) / TILE_SIZE))
-        return (0);
-    return (1);
-}
-void handle_forward_backward(t_cub3d *cub, double *new_x, double *new_y)
+int	is_valid_position(t_cub3d *cub, double x, double y)
 {
-    if (cub->keys.up || cub->keys.w)
-    {
-        *new_x += cos(cub->player.angle) * MOVE_SPEED;
-        *new_y += sin(cub->player.angle) * MOVE_SPEED;
-    }
-    if (cub->keys.down || cub->keys.s)
-    {
-        *new_x -= cos(cub->player.angle) * MOVE_SPEED;
-        *new_y -= sin(cub->player.angle) * MOVE_SPEED;
-    }
+	int	cx;
+	int	cy;
+
+	cx = (int)x;
+	cy = (int)y;
+	return (check_collision(cub, cx, cy));
 }
-void handle_strafe(t_cub3d *cub, double *new_x, double *new_y)
+
+void	handle_forward_backward(t_cub3d *cub, double *x, double *y)
 {
-    if (cub->keys.a)
-    {
-        *new_x += cos(cub->player.angle - M_PI_2) * MOVE_SPEED;
-        *new_y += sin(cub->player.angle - M_PI_2) * MOVE_SPEED;
-    }
-    if (cub->keys.d)
-    {
-        *new_x += cos(cub->player.angle + M_PI_2) * MOVE_SPEED;
-        *new_y += sin(cub->player.angle + M_PI_2) * MOVE_SPEED;
-    }
+	double	a;
+
+	a = cub->player.angle;
+	if (cub->keys.up || cub->keys.w)
+	{
+		*x += cos(a) * MOVE_SPEED;
+		*y += sin(a) * MOVE_SPEED;
+	}
+	if (cub->keys.down || cub->keys.s)
+	{
+		*x -= cos(a) * MOVE_SPEED;
+		*y -= sin(a) * MOVE_SPEED;
+	}
 }
-void handle_rotation(t_cub3d *cub)
+
+void	handle_strafe(t_cub3d *cub, double *x, double *y)
 {
-    if (cub->keys.left)
-    {
-        cub->player.angle -= ROTATE_SPEED;
-        // if (cub->player.angle < 0)
-            // cub->player.angle += 2 * M_PI;
-    }
-    if (cub->keys.right)
-    {
-        cub->player.angle += ROTATE_SPEED;
-        // if (cub->player.angle >= 2 * M_PI)
-            // cub->player.angle -= 2 * M_PI;
-    }
+	double	a;
+
+	a = cub->player.angle;
+	if (cub->keys.a)
+	{
+		*x += cos(a - M_PI_2) * MOVE_SPEED;
+		*y += sin(a - M_PI_2) * MOVE_SPEED;
+	}
+	if (cub->keys.d)
+	{
+		*x += cos(a + M_PI_2) * MOVE_SPEED;
+		*y += sin(a + M_PI_2) * MOVE_SPEED;
+	}
 }
-void update_player_position(t_cub3d *cub)
+
+void	handle_rotation(t_cub3d *cub)
 {
-    double new_x;
-    double new_y;
-    double temp_x;
-    double temp_y;
-    new_x = cub->player.pos.x;
-    new_y = cub->player.pos.y;
-    temp_x = new_x;
-    temp_y = new_y;
-    handle_forward_backward(cub, &new_x, &new_y);
-    handle_strafe(cub, &new_x, &new_y);
-    handle_rotation(cub);
-    if (is_valid_position(cub, new_x, temp_y))
-        cub->player.pos.x = new_x;
-    if (is_valid_position(cub, temp_x, new_y))
-        cub->player.pos.y = new_y;
+	if (cub->keys.left)
+		cub->player.angle -= ROTATE_SPEED;
+	if (cub->keys.right)
+		cub->player.angle += ROTATE_SPEED;
+	cub->player.angle = normlize_angle(cub->player.angle);
 }

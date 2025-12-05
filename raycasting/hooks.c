@@ -1,68 +1,61 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hooks.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ysouaf <ysouaf@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/05 16:12:52 by ysouaf            #+#    #+#             */
+/*   Updated: 2025/12/05 16:15:14 by ysouaf           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-void key_press(mlx_key_data_t keydata, void* ptr)
+static void	set_key(t_cub3d *cub, int key, int value)
 {
-    t_cub3d *cub = ptr;
-    
-    // Handle key press (when key is pressed down)
-    if (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT)
-    {
-        if (keydata.key == MLX_KEY_W)
-            cub->keys.w = 1;
-        else if (keydata.key == MLX_KEY_S)
-            cub->keys.s = 1;
-        else if (keydata.key == MLX_KEY_A)
-            cub->keys.a = 1;
-        else if (keydata.key == MLX_KEY_D)
-            cub->keys.d = 1;
-        else if (keydata.key == MLX_KEY_UP)
-            cub->keys.up = 1;
-        else if (keydata.key == MLX_KEY_DOWN)
-            cub->keys.down = 1;
-        else if (keydata.key == MLX_KEY_LEFT)
-            cub->keys.left = 1;
-        else if (keydata.key == MLX_KEY_RIGHT)
-            cub->keys.right = 1;
-        else if (keydata.key == MLX_KEY_ESCAPE)
-            mlx_close_window(cub->mlx);
-    }
-    // Handle key release (when key is released)
-    else if (keydata.action == MLX_RELEASE)
-    {
-        if (keydata.key == MLX_KEY_W)
-            cub->keys.w = 0;
-        else if (keydata.key == MLX_KEY_S)
-            cub->keys.s = 0;
-        else if (keydata.key == MLX_KEY_A)
-            cub->keys.a = 0;
-        else if (keydata.key == MLX_KEY_D)
-            cub->keys.d = 0;
-        else if (keydata.key == MLX_KEY_UP)
-            cub->keys.up = 0;
-        else if (keydata.key == MLX_KEY_DOWN)
-            cub->keys.down = 0;
-        else if (keydata.key == MLX_KEY_LEFT)
-            cub->keys.left = 0;
-        else if (keydata.key == MLX_KEY_RIGHT)
-            cub->keys.right = 0;
-    }
+	if (key == MLX_KEY_W)
+		cub->keys.w = value;
+	else if (key == MLX_KEY_S)
+		cub->keys.s = value;
+	else if (key == MLX_KEY_A)
+		cub->keys.a = value;
+	else if (key == MLX_KEY_D)
+		cub->keys.d = value;
+	else if (key == MLX_KEY_UP)
+		cub->keys.up = value;
+	else if (key == MLX_KEY_DOWN)
+		cub->keys.down = value;
+	else if (key == MLX_KEY_LEFT)
+		cub->keys.left = value;
+	else if (key == MLX_KEY_RIGHT)
+		cub->keys.right = value;
 }
 
-void close_hook(void* ptr)
+void	key_press(mlx_key_data_t keydata, void *ptr)
 {
-    t_cub3d *cub = ptr;
-    mlx_close_window(cub->mlx);
+	t_cub3d	*cub;
+
+	cub = (t_cub3d *)ptr;
+	if (keydata.key == MLX_KEY_ESCAPE && keydata.action == MLX_PRESS)
+		mlx_close_window(cub->mlx);
+	else if (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT)
+		set_key(cub, keydata.key, 1);
+	else if (keydata.action == MLX_RELEASE)
+		set_key(cub, keydata.key, 0);
 }
 
-void setup_hooks(t_cub3d *cub)
+void	close_hook(void *ptr)
 {
-    // Key hook for keyboard input
-    mlx_key_hook(cub->mlx, key_press, cub);
-    
-    // Loop hook for continuous rendering
-    mlx_loop_hook(cub->mlx, render_map, cub);
-    
-    // Close hook (optional, ESC already handled in key_press)
-    mlx_close_hook(cub->mlx, close_hook, cub);
+	t_cub3d	*cub;
 
+	cub = (t_cub3d *)ptr;
+	mlx_close_window(cub->mlx);
+}
+
+void	setup_hooks(t_cub3d *cub)
+{
+	mlx_key_hook(cub->mlx, key_press, cub);
+	mlx_loop_hook(cub->mlx, render_map, cub);
+	mlx_close_hook(cub->mlx, close_hook, cub);
 }
